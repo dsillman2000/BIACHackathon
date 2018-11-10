@@ -62,17 +62,43 @@ for team in team_history:
 		if l != 0:
 			G.add_edge(team, counterTeam, weight=float(w / l))
 		else:
-			G.add_edge(team, counterTeam, weight=100.0)
+			G.add_edge(team, counterTeam, weight=1.0)
 
-print(G['CREW'])
-print(G['D9'])
-print(G['RED'])
-print(G['ONE'])
+'''Now we have our prediction algorithm'''
 
-ranks = {}
+search_depth = 3
+walks = []
+team = 'TSM'
+opponent = 'SKT'
 
-for team in G:
-	ranks[team] = sum([np.log(G[team][n]['weight']+1) for n in G[team]])
+for path in nx.all_simple_paths(G, source=team, target=opponent, cutoff=search_depth):
+	walks.append(path)
 
-ranks = sorted(ranks.items(), key=operator.itemgetter(1))
-print(ranks)
+avg = 0
+
+for walk in walks:
+	total = 1
+	for i in range(len(walk) - 1):
+		total *= G[walk[i]][walk[i+1]]['weight']
+	avg += total
+	print(total)
+avg = float(avg / len(walks))
+
+print(avg)
+print('P = ' + str(2.0 / 3.1415926 * np.arctan(avg)))
+'''
+def search(node, previous_nodes, current_depth):
+	if(current_depth < search_depth):
+		previous_nodes.append(node)
+		for neighbor in G[node]:
+			if neighbor == opponent:
+				previous_nodes.append(opponent)
+				print(previous_nodes)
+				walks.append(previous_nodes)
+			search(neighbor, previous_nodes, current_depth + 1)
+	else:
+		return
+
+search(team, [team], 0)
+'''
+
