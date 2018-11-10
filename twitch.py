@@ -1,18 +1,13 @@
 import urllib2
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
-site = 'https://overrustlelogs.net/Alexiaraye chatlog/November%202018/2018-11-09'
-hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
-       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-       'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
-       'Accept-Encoding': 'none',
-       'Accept-Language': 'en-US,en;q=0.8',
-       'Connection': 'keep-alive'}
-req = urllib2.Request(site, headers=hdr)
+site = 'https://overrustlelogs.net/Riotgames%20chatlog/October%202018/2018-10-04'
 
-page = urllib2.urlopen(req)
-
-soup = BeautifulSoup(page, 'html.parser')
+browser=webdriver.Firefox()
+browser.get(site)
+soup = BeautifulSoup(browser.page_source, "html.parser")
 
 div_box = soup.find('div', attrs={'class':'text'})
-
+print(div_box)
